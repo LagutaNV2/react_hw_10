@@ -4,3 +4,9 @@ export type Item = {
     title: string;
     price: number;
   };
+
+export type ItemsState = {
+  items: Item[];
+  editingItemId: string | null;
+  filter: string;
+};
