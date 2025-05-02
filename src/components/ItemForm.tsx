@@ -13,25 +13,37 @@ const ItemForm: React.FC<ItemFormProps> = ({ editingItemId }) => {
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.items.items);
 
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
+  const [formState, setFormState] = useState({
+    title: '',
+    price: '',
+  });
 
   // Если редактируем существующий элемент
   const editingItem = items.find((item) => item.id === editingItemId);
 
   React.useEffect(() => {
     if (editingItem) {
-      setTitle(editingItem.title);
-      setPrice(String(editingItem.price));
+      setFormState({
+        title: editingItem.title,
+        price: String(editingItem.price),
+      });
     } else {
-      setTitle('');
-      setPrice('');
+      setFormState({ title: '', price: '' });
     }
   }, [editingItem]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const { title, price } = formState;
     if (!title || !price) return;
 
     const newItem: Item = {
@@ -46,26 +58,27 @@ const ItemForm: React.FC<ItemFormProps> = ({ editingItemId }) => {
       dispatch(addItem(newItem));
     }
 
-    setTitle('');
-    setPrice('');
+    setFormState({ title: '', price: '' });
     dispatch(setEditingItem(null));
   };
 
-  const isFormFilled = title.trim() !== '' || price.trim() !== '';
+  const isFormFilled = formState.title.trim() !== '' || formState.price.trim() !== '';
 
   return (
     <form onSubmit={handleSubmit}>
       <input
         type="text"
+        name="title"
         placeholder="Название"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={formState.title}
+        onChange={handleChange}
       />
       <input
         type="number"
+        name="price"
         placeholder="Цена"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        value={formState.price}
+        onChange={handleChange}
       />
       <button type="submit">Save</button>
 
@@ -73,8 +86,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ editingItemId }) => {
         <button
           type="button"
           onClick={() => {
-            setTitle('');
-            setPrice('');
+            setFormState({ title: '', price: '' });
             dispatch(setEditingItem(null));
           }}
         >

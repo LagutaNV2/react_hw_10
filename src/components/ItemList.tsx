@@ -3,7 +3,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteItem, setEditingItem } from '../redux/itemsSlice';
 import { RootState } from '../redux/store';
-import { Item } from '../types/itemTypes';
 
 const ItemList: React.FC = () => {
   const dispatch = useDispatch();

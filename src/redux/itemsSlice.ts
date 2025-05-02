@@ -2,7 +2,7 @@
 // автоматически генерирует action types на основе названия слайса и редьюсеров
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import type { Item, ItemsState } from '../types/itemTypes';
+import type { ItemsState } from '../types/itemTypes';
 
 const initialState: ItemsState = {
   items: [],
